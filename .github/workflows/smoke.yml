@@ -20,12 +20,13 @@ jobs:
             const browser = await chromium.launch({channel:'chrome',headless:true,args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});
             const page = await browser.newPage({viewport:{width:1280,height:720}});
             const logs = [], responses = [];
+            page.on('requestfailed', r => logs.push({type:'error',text:r.url()+': '+r.failure()?.errorText}));
             page.on('console', m => logs.push({type:m.type(),text:m.text()}));
             page.on('pageerror', e => logs.push({type:'pageerror',text:e.message}));
             page.on('response', r => responses.push({url:r.url(),status:r.status()}));
             let failure;
             try {
-              await page.goto('https://stmluyuer.github.io/Mute-Web/',{waitUntil:'domcontentloaded',timeout:60000});
+              await page.goto('https://mute.luyulab.xyz/',{waitUntil:'domcontentloaded',timeout:60000});
               await page.waitForFunction(() => !document.getElementById('status') || document.getElementById('status-notice')?.textContent.trim(),null,{timeout:180000});
               if(await page.locator('#status-notice').count()) throw new Error(await page.locator('#status-notice').textContent());
               await page.waitForTimeout(2000);
