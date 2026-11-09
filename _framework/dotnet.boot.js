@@ -1,7 +1,7 @@
 export const config = /*json-start*/{
   "mainAssemblyName": "Mute.web.dll",
   "resources": {
-    "hash": "sha256-bqfd59avNunceUyvOcYy1FmDBtnCFp1vqjDu/Q1BnrQ=",
+    "hash": "sha256-2C8QJGHwGp/QqyS/lLafW0gVKNMe8Ga3sS4hCdRbrL4=",
     "jsModuleNative": [
       {
         "name": "dotnet.native.js"
@@ -15,7 +15,7 @@ export const config = /*json-start*/{
     "wasmNative": [
       {
         "name": "dotnet.native.wasm",
-        "hash": "sha256-wCCZHGW/JaIKExEp3nhdyd3ByTbymgMeoClOnP1tT0g="
+        "hash": "sha256-zhz9biK6XEVuEZLn3uji9hDoOOF5hrz5/jkJzvVjefU="
       }
     ],
     "icu": [
@@ -39,7 +39,7 @@ export const config = /*json-start*/{
       {
         "virtualPath": "System.Private.CoreLib.wasm",
         "name": "System.Private.CoreLib.wasm",
-        "hash": "sha256-3yKpFPTtRAKjRGemh+uTYrpYcwowxel5dTtAV9nwxBM="
+        "hash": "sha256-4tjMGBMXoifu26dgeSK26RhT6PEbJ2bX8R+H6YhEREo="
       },
       {
         "virtualPath": "System.Runtime.InteropServices.JavaScript.wasm",
@@ -61,12 +61,12 @@ export const config = /*json-start*/{
       {
         "virtualPath": "Mute.wasm",
         "name": "Mute.wasm",
-        "hash": "sha256-FRzuiU7+Rgim7aQhsyPIiNAPWSNuMJw2eMu11FkfamE="
+        "hash": "sha256-EOywq90inwLWCYT7XMmrJh+6lNiekVOgRtJmVfT0stU="
       },
       {
         "virtualPath": "Mute.web.wasm",
         "name": "Mute.web.wasm",
-        "hash": "sha256-/XdHr5Gs+abh0OjQ+Ih5uOpikShl5LuF1mWDF50c3xU="
+        "hash": "sha256-XEIgUnlg1vlbHD2aA9bnMpJcoWUfnJ3Y+jl83aNGEVg="
       },
       {
         "virtualPath": "System.Collections.Concurrent.wasm",
@@ -101,7 +101,7 @@ export const config = /*json-start*/{
       {
         "virtualPath": "System.IO.Compression.wasm",
         "name": "System.IO.Compression.wasm",
-        "hash": "sha256-QVG9ixwAz4zxWc94h3rY6TLOSRGSgvmtGCsdtMG/fhY="
+        "hash": "sha256-A3j/1dPOmY0x5PbG1UVCeIWMH08HoDn1tO/Ldudm9uQ="
       },
       {
         "virtualPath": "System.IO.Pipelines.wasm",
@@ -126,7 +126,7 @@ export const config = /*json-start*/{
       {
         "virtualPath": "System.Runtime.wasm",
         "name": "System.Runtime.wasm",
-        "hash": "sha256-jaPF/upImtIgjUvW5dI8L7T9hBgfuYz5m8l3mquH9F8="
+        "hash": "sha256-wj63MKDYsWXqVtd8kRdiyR/fcDW9M9QA7eLQGFFL5mc="
       },
       {
         "virtualPath": "System.Runtime.InteropServices.wasm",
