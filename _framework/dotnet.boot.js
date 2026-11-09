@@ -1,7 +1,7 @@
 export const config = /*json-start*/{
   "mainAssemblyName": "Mute.web.dll",
   "resources": {
-    "hash": "sha256-2C8QJGHwGp/QqyS/lLafW0gVKNMe8Ga3sS4hCdRbrL4=",
+    "hash": "sha256-Ji/tK1giYcdHslgQos55wXHHKV38/DAJx9u40jgXYCs=",
     "jsModuleNative": [
       {
         "name": "dotnet.native.js"
@@ -15,7 +15,7 @@ export const config = /*json-start*/{
     "wasmNative": [
       {
         "name": "dotnet.native.wasm",
-        "hash": "sha256-zhz9biK6XEVuEZLn3uji9hDoOOF5hrz5/jkJzvVjefU="
+        "hash": "sha256-tiwdZMucQzlLcRIHWMv73WFLfCJfhyqmkDFCVz7TK9g="
       }
     ],
     "icu": [
@@ -39,7 +39,7 @@ export const config = /*json-start*/{
       {
         "virtualPath": "System.Private.CoreLib.wasm",
         "name": "System.Private.CoreLib.wasm",
-        "hash": "sha256-4tjMGBMXoifu26dgeSK26RhT6PEbJ2bX8R+H6YhEREo="
+        "hash": "sha256-J93u/BAsdNTEoAqUfXtzq6yRGjLJA255C5pfbjuVCMI="
       },
       {
         "virtualPath": "System.Runtime.InteropServices.JavaScript.wasm",
@@ -61,12 +61,12 @@ export const config = /*json-start*/{
       {
         "virtualPath": "Mute.wasm",
         "name": "Mute.wasm",
-        "hash": "sha256-EOywq90inwLWCYT7XMmrJh+6lNiekVOgRtJmVfT0stU="
+        "hash": "sha256-rRA+WTulQiFLuWIsevXH0D+jm3rIZq1/Px+vzkSJzYM="
       },
       {
         "virtualPath": "Mute.web.wasm",
         "name": "Mute.web.wasm",
-        "hash": "sha256-XEIgUnlg1vlbHD2aA9bnMpJcoWUfnJ3Y+jl83aNGEVg="
+        "hash": "sha256-EqpOel7+EBxbFgCdej4+7ppS9DmVoygzC1MkcFdyQ6I="
       },
       {
         "virtualPath": "System.Collections.Concurrent.wasm",
@@ -111,7 +111,7 @@ export const config = /*json-start*/{
       {
         "virtualPath": "System.Linq.wasm",
         "name": "System.Linq.wasm",
-        "hash": "sha256-+cVgLZiNJj59j69DVwt8lzfVCGPK7So2LSW9yEvE+pY="
+        "hash": "sha256-pYhf5gEMSeSEAuluFnW0s60ZPchZTKKSUXuGf7d1dZo="
       },
       {
         "virtualPath": "System.Memory.wasm",
@@ -171,7 +171,7 @@ export const config = /*json-start*/{
       {
         "virtualPath": "System.Threading.wasm",
         "name": "System.Threading.wasm",
-        "hash": "sha256-/gJmPoDsiaDVLzhad1JZsd/a9wcuzPAZuPCL9YqgXro="
+        "hash": "sha256-wpoytg45TU6q546rv+ywHVD+Mf2EXH6xwGhgV/3iEWQ="
       },
       {
         "virtualPath": "twodog.wasm",
