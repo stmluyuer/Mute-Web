@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mute</title>
+    <link rel="icon" href="data:,">
+    
+    <script>
+        const TWODOG_PCK_GZ = true;
+        const TWODOG_PCK_PARTS = [{"path": "godot.pck.gz.part000", "size": 50331648}, {"path": "godot.pck.gz.part001", "size": 50331648}, {"path": "godot.pck.gz.part002", "size": 19792567}];
+        const twodogGz = TWODOG_PCK_GZ && typeof DecompressionStream !== 'undefined';
+        // 本地文件页只显示启动说明，不提前发起浏览器会拒绝的模块请求。
+        if (location.protocol !== 'file:') {
+            for (const file of ['dotnet.js', 'dotnet.boot.js', 'dotnet.runtime.js', 'dotnet.native.js']) {
+                const hint = document.createElement('link');
+                hint.rel = 'modulepreload';
+                hint.href = '_framework/' + file;
+                document.head.appendChild(hint);
+            }
+        }
+    </script>
+    <style>
+        :root {
+            color-scheme: dark;
+            --surface: #1c1626;
+            --text: #eee9df;
+            --muted: #aaa0ae;
+            --line: #514453;
+            --accent: #cf626f;
+        }
+        * { box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+        body { background: var(--surface); color: var(--text); font: 14px/1.5 system-ui, sans-serif; }
+        #canvas { display: block; width: 100%; height: 100%; border: 0; outline: none; touch-action: none; }
+        #status, noscript {
+            position: absolute; inset: 0; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 24px; background: var(--surface);
+        }
+        noscript { z-index: 3; padding: 24px; text-align: center; }
+        #status-title { margin: 0; font: 400 38px/1.2 Georgia, serif; letter-spacing: .12em; }
+        #status-bar { position: relative; width: min(60%, 240px); height: 3px; background: var(--line); overflow: hidden; display: none; }
+        #status-progress { position: absolute; inset: 0; opacity: 0; }
+        /* 引擎初始化会占用主线程，合成动画仍能表达正在载入。 */
+        #status-bar::after { content: ''; position: absolute; inset: 0; width: 35%; background: var(--accent); animation: loading 1.5s ease-in-out infinite; }
+        @keyframes loading { from { transform: translateX(-100%); } to { transform: translateX(290%); } }
+        @media (prefers-reduced-motion: reduce) { #status-bar::after { animation: none; width: 100%; opacity: .6; } }
+        #status-notice { display: none; max-width: 640px; margin: 0 24px; white-space: pre-line; overflow-wrap: anywhere; color: var(--text); }
+        #fullscreen {
+            position: absolute; right: 12px; bottom: 12px; z-index: 2; min-height: 36px;
+            padding: 6px 12px; border: 1px solid var(--line); border-radius: 8px;
+            color: var(--text); background: var(--surface); font: inherit; cursor: pointer;
+        }
+        #fullscreen:hover { border-color: var(--muted); }
+        #fullscreen:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+        #fullscreen[hidden] { display: none; }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" width="1920" height="1080" tabindex="0" aria-label="Mute game">
+        Your browser does not support the canvas tag.
+    </canvas>
+
+    <noscript>
+        Your browser does not support JavaScript.
+    </noscript>
+
+    <div id="status">
+        
+        <p id="status-title" translate="no">Mute</p>
+        <div id="status-bar"><progress id="status-progress" aria-label="Loading progress"></progress></div>
+        <div id="status-notice" role="alert"></div>
+    </div>
+
+    <button id="fullscreen" type="button" hidden>Full screen</button>
+    <script src="godot.js"></script>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const fullscreen = document.getElementById('fullscreen');
+        fullscreen.hidden = !document.fullscreenEnabled;
+        canvas.addEventListener('pointerdown', () => canvas.focus());
+        canvas.addEventListener('contextmenu', event => event.preventDefault());
+        canvas.addEventListener('wheel', event => event.preventDefault(), { passive: false });
+        canvas.addEventListener('keydown', event => {
+            if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.code)) {
+                event.preventDefault();
+            }
+        });
+        fullscreen.addEventListener('click', async () => {
+            try {
+                if (document.fullscreenElement) await document.exitFullscreen();
+                else await document.documentElement.requestFullscreen();
+                canvas.focus();
+            } catch (error) {
+                fullscreen.textContent = 'Full screen unavailable';
+                fullscreen.title = error.message;
+            }
+        });
+        document.addEventListener('fullscreenchange', () => {
+            fullscreen.textContent = document.fullscreenElement ? 'Exit full screen' : 'Full screen';
+        });
+        const GODOT_CONFIG = {
+            'args': ['--rendering-driver', 'opengl3', '--rendering-method', 'gl_compatibility'],
+            'renderingDriver': 'opengl3',
+            'canvasResizePolicy': 2,
+            'ensureCrossOriginIsolationHeaders': false,
+            'executable': 'godot',
+            'experimentalVK': false,
+            'focusCanvas': true,
+            'gdextensionLibs': []
+        };
+        const GODOT_THREADS_ENABLED = false;
+
+        (function () {
+            performance.mark('2dog:boot');
+
+            const statusOverlay = document.getElementById('status');
+            const statusBar = document.getElementById('status-bar');
+            const statusNotice = document.getElementById('status-notice');
+
+            let initializing = true;
+            let statusMode = '';
+
+            function setStatusMode(mode) {
+                if (statusMode === mode || !initializing) {
+                    return;
+                }
+                if (mode === 'hidden') {
+                    statusOverlay.remove();
+                    initializing = false;
+                    return;
+                }
+                statusBar.style.display = mode === 'progress' ? 'block' : 'none';
+                statusNotice.style.display = mode === 'notice' ? 'block' : 'none';
+                statusMode = mode;
+            }
+
+            function displayFailureNotice(err) {
+                console.error(err);
+                statusNotice.textContent = typeof err?.message === 'string' ? err.message : String(err);
+                setStatusMode('notice');
+                initializing = false;
+            }
+
+            if (location.protocol === 'file:') {
+                statusNotice.textContent = navigator.language.startsWith('zh')
+                    ? '请先解压完整网页包，再双击 start_local.cmd。\n浏览器不能直接读取本地游戏资源，请通过启动脚本打开的 http://127.0.0.1:8765/ 游玩。'
+                    : 'Extract the entire package, then double-click start_local.cmd.\nPlay at http://127.0.0.1:8765/ opened by the launcher. Browsers cannot load this game directly from a local HTML file.';
+                setStatusMode('notice');
+                fullscreen.hidden = true;
+                initializing = false;
+                return;
+            }
+
+            let downloadsDone = false;
+
+            function reportProgress(current, total) {
+                if (!downloadsDone && total > 0 && current >= total) {
+                    downloadsDone = true;
+                    performance.mark('2dog:downloads-done');
+                }
+            }
+            let engineProgress = reportProgress;
+
+            async function fetchPack() {
+                if (TWODOG_PCK_PARTS.length === 0) return fetch('godot.pck.gz');
+                // 分片是同一 gzip 文件的连续字节，逐片送入原有解压流。
+                async function* readParts() {
+                    for (const part of TWODOG_PCK_PARTS) {
+                        const response = await fetch(part.path);
+                        if (!response.ok) throw new Error(`Cannot load ${part.path}: HTTP ${response.status}`);
+                        const reader = response.body.getReader();
+                        try {
+                            while (true) {
+                                const { value, done } = await reader.read();
+                                if (done) break;
+                                yield value;
+                            }
+                        } finally {
+                            await reader.cancel();
+                            reader.releaseLock();
+                        }
+                    }
+                }
+                const chunks = readParts();
+                const body = new ReadableStream({
+                    async pull(controller) {
+                        try {
+                            const { value, done } = await chunks.next();
+                            if (done) controller.close();
+                            else controller.enqueue(value);
+                        } catch (error) {
+                            controller.error(error);
+                        }
+                    },
+                    async cancel() { await chunks.return(); },
+                });
+                return new Response(body, {
+                    headers: { 'Content-Length': String(TWODOG_PCK_PARTS.reduce((sum, part) => sum + part.size, 0)) },
+                });
+            }
+
+            function startWithGzPack(fileSizes, makeEngine) {
+                return fetchPack().then((response) => {
+                    if (!response || !response.ok || !response.body) {
+                        console.warn('2dog: godot.pck.gz unavailable, falling back to godot.pck');
+                        return makeEngine('').startGame({});
+                    }
+                    const engine = makeEngine('.gz');
+                    let pckLoaded = 0;
+                    let wasmLoaded = 0;
+                    let wasmTotal = fileSizes['godot.wasm'] || 0;
+                    const pckTotal = Number(response.headers.get('Content-Length')) || 0;
+                    const report = () => reportProgress(wasmLoaded + pckLoaded,
+                        wasmTotal > 0 && pckTotal > 0 ? wasmTotal + pckTotal : 0);
+                    engineProgress = (current, total) => {
+                        wasmLoaded = current;
+                        if (total > 0) wasmTotal = total;
+                        report();
+                    };
+                    const counted = new TransformStream({
+                        transform(chunk, controller) {
+                            pckLoaded += chunk.byteLength;
+                            report();
+                            controller.enqueue(chunk);
+                        },
+                    });
+                    const pack = new Response(
+                        response.body.pipeThrough(counted).pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
+                    return Promise.all([
+                        engine.init(GODOT_CONFIG['executable']),
+                        pack.then((buffer) => engine.preloadFile(buffer, 'godot.pck')),
+                    ]).then(() => engine.start({ 'args': ['--main-pack', 'godot.pck'].concat(GODOT_CONFIG['args']) }));
+                });
+            }
+
+            function reportTimings() {
+                performance.mark('2dog:first-frame');
+                const total = performance.measure('2dog:total', '2dog:boot', '2dog:first-frame').duration;
+                let text = '2dog: first frame ' + Math.round(total) + ' ms after boot';
+                if (downloadsDone) {
+                    const tail = performance.measure('2dog:tail', '2dog:downloads-done', '2dog:first-frame').duration;
+                    text += ' (' + Math.round(total - tail) + ' ms downloading, ' + Math.round(tail) + ' ms starting)';
+                }
+                console.log(text);
+                if (!new URLSearchParams(location.search).has('2dog-timing')) {
+                    return;
+                }
+                const rows = performance.getEntriesByType('resource')
+                    .filter((entry) => entry.transferSize > 100000)
+                    .sort((a, b) => b.transferSize - a.transferSize)
+                    .map((entry) => ({
+                        file: entry.name.replace(/.*\//, ''),
+                        'wire kB': Math.round(entry.transferSize / 1000),
+                        ms: Math.round(entry.duration),
+                    }));
+                if (rows.length) console.table(rows);
+            }
+
+            const missing = Engine.getMissingFeatures({
+                threads: GODOT_THREADS_ENABLED,
+                renderingDriver: GODOT_CONFIG['renderingDriver'],
+            });
+
+            if (missing.length !== 0) {
+                const missingMsg = 'Error\nThe following features required to run Godot projects on the Web are missing:\n';
+                displayFailureNotice(missingMsg + missing.join('\n'));
+                return;
+            }
+            fetch('twodog.sizes.json')
+                .then((response) => (response.ok ? response.json() : {}))
+                .catch(() => ({}))
+                .then((fileSizes) => {
+                    const makeEngine = (suffix) => {
+                        GODOT_CONFIG['fileSizes'] = fileSizes;
+                        GODOT_CONFIG['onProgress'] = (current, total) => engineProgress(current, total);
+                        GODOT_CONFIG['precompressedSuffix'] = suffix;
+                        return new Engine(GODOT_CONFIG);
+                    };
+                    setStatusMode('progress');
+                    const started = twodogGz
+                        ? startWithGzPack(fileSizes, makeEngine)
+                        : makeEngine('').startGame({});
+                    return started.then(() => {
+                        reportTimings();
+                        setStatusMode('hidden');
+                    }, displayFailureNotice);
+                })
+                .catch(displayFailureNotice);
+        }());
+    </script>
+</body>
+
+</html>
+
