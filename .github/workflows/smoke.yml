@@ -1,0 +1,46 @@
+name: Check deployed Mute
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Install browser driver
+        run: npm install --prefix "$RUNNER_TEMP/mute-smoke" --no-package-lock playwright
+      - name: Load published game
+        env:
+          NODE_PATH: ${{ runner.temp }}/mute-smoke/node_modules
+        run: |
+          node <<'JS'
+          const fs = require('node:fs');
+          const {chromium} = require('playwright');
+          (async () => {
+            const browser = await chromium.launch({channel:'chrome',headless:true,args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});
+            const page = await browser.newPage({viewport:{width:1280,height:720}});
+            const logs = [], responses = [];
+            page.on('console', m => logs.push({type:m.type(),text:m.text()}));
+            page.on('pageerror', e => logs.push({type:'pageerror',text:e.message}));
+            page.on('response', r => responses.push({url:r.url(),status:r.status()}));
+            let failure;
+            try {
+              await page.goto('https://stmluyuer.github.io/Mute-Web/',{waitUntil:'domcontentloaded',timeout:60000});
+              await page.waitForFunction(() => !document.getElementById('status') || document.getElementById('status-notice')?.textContent.trim(),null,{timeout:180000});
+              if(await page.locator('#status-notice').count()) throw new Error(await page.locator('#status-notice').textContent());
+              await page.waitForTimeout(2000);
+            } catch(error) { failure = error.message; }
+            const state = await page.evaluate(() => ({title:document.title,loading:!!document.getElementById('status'),firstFrame:performance.getEntriesByName('2dog:first-frame').length}));
+            const errors = logs.filter(x=>['error','pageerror'].includes(x.type));
+            fs.writeFileSync('smoke.json',JSON.stringify({state,failure,logs,responses},null,2));
+            console.log(JSON.stringify({state,failure,errors,parts:responses.filter(x=>x.url.includes('.part'))}));
+            await browser.close();
+            if(failure || !state.firstFrame || errors.length) process.exitCode=1;
+          })().catch(error=>{console.error(error);process.exitCode=1;});
+          JS
+      - name: Save loading evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: online-smoke
+          path: smoke.json
