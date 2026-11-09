@@ -1,7 +1,7 @@
 export const config = /*json-start*/{
   "mainAssemblyName": "Mute.web.dll",
   "resources": {
-    "hash": "sha256-TrykUblX8GrxHVCFmZyybZywZ3MI5u7PZzTFZA+MIV4=",
+    "hash": "sha256-u376nLK5j6UI0quByZw/koJ8KK0OL9y6hhoPzlOEvLM=",
     "jsModuleNative": [
       {
         "name": "dotnet.native.js"
@@ -61,12 +61,12 @@ export const config = /*json-start*/{
       {
         "virtualPath": "Mute.wasm",
         "name": "Mute.wasm",
-        "hash": "sha256-Tk7HciPqOFK4SBroTwvz1t6kkmUaXeux8iQNN3ZqPxU="
+        "hash": "sha256-+FLPHkKlYG2fgb84WV3jcrXfpwPBj6rSnKkUXLPHLQc="
       },
       {
         "virtualPath": "Mute.web.wasm",
         "name": "Mute.web.wasm",
-        "hash": "sha256-bAZBVll9klVNiqJGn+Bs5nHZtyujXjLDD6gmP8EHgn0="
+        "hash": "sha256-QkgGrQUllxChzxbty0BFxaG6ltFUf3YNGhEBO/BqV/s="
       },
       {
         "virtualPath": "System.Collections.Concurrent.wasm",

@@ -9,7 +9,7 @@
     
     <script>
         const TWODOG_PCK_GZ = true;
-        const TWODOG_PCK_PARTS = [{"path": "godot.pck.gz.part000", "size": 50331648}, {"path": "godot.pck.gz.part001", "size": 46219848}];
+        const TWODOG_PCK_PARTS = [{"path": "godot.pck.gz.part000", "size": 50331648}, {"path": "godot.pck.gz.part001", "size": 46219840}];
         const twodogGz = TWODOG_PCK_GZ && typeof DecompressionStream !== 'undefined';
         // 本地文件页只显示启动说明，不提前发起浏览器会拒绝的模块请求。
         if (location.protocol !== 'file:') {
@@ -169,7 +169,9 @@
                     statusProgress.max = total;
                     statusProgress.value = Math.min(current, total);
                     const percent = Math.min(100, Math.floor(current / total * 100));
-                    statusDetail.textContent = chinese ? `资源加载 ${percent}%` : `Loading resources ${percent}%`;
+                    statusDetail.textContent = percent === 100
+                        ? (chinese ? '资源包已就绪，正在准备运行环境…' : 'Resources ready, preparing runtime…')
+                        : (chinese ? `资源加载 ${percent}%` : `Loading resources ${percent}%`);
                 } else {
                     statusProgress.removeAttribute('value');
                     statusDetail.textContent = chinese ? '正在加载资源…' : 'Loading resources…';
