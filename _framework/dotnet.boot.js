@@ -1,7 +1,7 @@
 export const config = /*json-start*/{
   "mainAssemblyName": "Mute.web.dll",
   "resources": {
-    "hash": "sha256-u376nLK5j6UI0quByZw/koJ8KK0OL9y6hhoPzlOEvLM=",
+    "hash": "sha256-bqfd59avNunceUyvOcYy1FmDBtnCFp1vqjDu/Q1BnrQ=",
     "jsModuleNative": [
       {
         "name": "dotnet.native.js"
@@ -15,7 +15,7 @@ export const config = /*json-start*/{
     "wasmNative": [
       {
         "name": "dotnet.native.wasm",
-        "hash": "sha256-uX8PdbPxHosIhSeCKP0GM/npcLpiMTCGO2K5UfDdX9s="
+        "hash": "sha256-wCCZHGW/JaIKExEp3nhdyd3ByTbymgMeoClOnP1tT0g="
       }
     ],
     "icu": [
@@ -39,7 +39,7 @@ export const config = /*json-start*/{
       {
         "virtualPath": "System.Private.CoreLib.wasm",
         "name": "System.Private.CoreLib.wasm",
-        "hash": "sha256-Ze4r7BHK2Mc9akGXOPsC0F1C0RDmbqIe7Eu1LgCABtA="
+        "hash": "sha256-3yKpFPTtRAKjRGemh+uTYrpYcwowxel5dTtAV9nwxBM="
       },
       {
         "virtualPath": "System.Runtime.InteropServices.JavaScript.wasm",
@@ -61,12 +61,12 @@ export const config = /*json-start*/{
       {
         "virtualPath": "Mute.wasm",
         "name": "Mute.wasm",
-        "hash": "sha256-+FLPHkKlYG2fgb84WV3jcrXfpwPBj6rSnKkUXLPHLQc="
+        "hash": "sha256-FRzuiU7+Rgim7aQhsyPIiNAPWSNuMJw2eMu11FkfamE="
       },
       {
         "virtualPath": "Mute.web.wasm",
         "name": "Mute.web.wasm",
-        "hash": "sha256-QkgGrQUllxChzxbty0BFxaG6ltFUf3YNGhEBO/BqV/s="
+        "hash": "sha256-/XdHr5Gs+abh0OjQ+Ih5uOpikShl5LuF1mWDF50c3xU="
       },
       {
         "virtualPath": "System.Collections.Concurrent.wasm",
@@ -121,7 +121,7 @@ export const config = /*json-start*/{
       {
         "virtualPath": "System.Private.Uri.wasm",
         "name": "System.Private.Uri.wasm",
-        "hash": "sha256-E4BroTy5VedSpdbwhV+IpzTBNBo9ix139eJctDwFmnQ="
+        "hash": "sha256-Fu5GhqUo8CSkmUVPsgFCdEmh3dSgmDaQ5SaLpADOKbk="
       },
       {
         "virtualPath": "System.Runtime.wasm",
@@ -161,7 +161,7 @@ export const config = /*json-start*/{
       {
         "virtualPath": "System.Text.Json.wasm",
         "name": "System.Text.Json.wasm",
-        "hash": "sha256-kR+pi98cHp5ZQX0ABhNRvJBp7FB8PWsP/AnG1vJugQg="
+        "hash": "sha256-B8VVNY9R4hJ8sYkaJI6nLuIGlqB7vRD0aq8oWYGBV4U="
       },
       {
         "virtualPath": "System.Text.RegularExpressions.wasm",

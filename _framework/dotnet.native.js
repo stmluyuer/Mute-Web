@@ -622,17 +622,17 @@ function createWasm() {
 // === Body ===
 
 var ASM_CONSTS = {
-  9908460: ($0, $1) => { if (globalThis.webgpuDump) { globalThis.webgpuLastSpirv = Array.from(HEAPU8.subarray($0, $0 + $1)); } },  
- 9908566: () => { var d = Module['preinitializedWebGPUDevice']; if (d && !d._uncapturedPatched) { d.addEventListener( 'uncapturederror', function(e) { console.error('[Godot-WebGPU] uncaptured error: ' + e.error.constructor.name + ' | ' + e.error.message); }); d._uncapturedPatched = true; } if (d && d.lost && !d._lostPatched) { d.lost.then(function(info) { console.error('[Godot-WebGPU] DEVICE LOST: reason=' + info.reason + ' | ' + info.message); }); d._lostPatched = true; } },  
- 9909030: () => { return Module['preinitializedWebGPUDevice'].features.has('float32-filterable') ? 1 : 0; },  
- 9909122: () => { return Module['preinitializedWebGPUDevice'].features.has('float32-blendable') ? 1 : 0; },  
- 9909213: () => { var d = Module['preinitializedWebGPUDevice']; return (d && d.features && d.features.has('texture-formats-tier1')) ? 1 : 0; },  
- 9909340: () => { return Module['preinitializedWebGPUDevice'].features.has('texture-formats-tier2') ? 1 : 0; },  
- 9909435: () => { return navigator.gpu.wgslLanguageFeatures.has('readonly_and_readwrite_storage_textures') ? 1 : 0; },  
- 9909537: () => { var d = Module["preinitializedWebGPUDevice"]; if (!d) { return 0; } return WebGPU["importJsDevice"](d); },  
- 9909645: () => { var info = Module['preinitializedWebGPUDevice']['godotAdapterInfo'] || {}; return stringToNewUTF8([info.vendor, info.description || info.architecture || info.device].filter(Boolean).join(' ') || 'WebGPU Device'); },  
- 9909862: () => { var vendor = (Module['preinitializedWebGPUDevice']['godotAdapterInfo'] || {}).vendor || ''; vendor = vendor.toLowerCase(); if (vendor.includes('nvidia')) return 0x10de; if (vendor.includes('amd') || vendor.startsWith('ati')) return 0x1002; if (vendor.includes('intel')) return 0x8086; if (vendor.includes('apple')) return 0x106b; if (vendor.includes('qualcomm')) return 0x5143; if (vendor.includes('arm')) return 0x13b5; return 0; },  
- 9910297: () => { return navigator.gpu.getPreferredCanvasFormat() === 'rgba8unorm'; }
+  9908828: ($0, $1) => { if (globalThis.webgpuDump) { globalThis.webgpuLastSpirv = Array.from(HEAPU8.subarray($0, $0 + $1)); } },  
+ 9908934: () => { var d = Module['preinitializedWebGPUDevice']; if (d && !d._uncapturedPatched) { d.addEventListener( 'uncapturederror', function(e) { console.error('[Godot-WebGPU] uncaptured error: ' + e.error.constructor.name + ' | ' + e.error.message); }); d._uncapturedPatched = true; } if (d && d.lost && !d._lostPatched) { d.lost.then(function(info) { console.error('[Godot-WebGPU] DEVICE LOST: reason=' + info.reason + ' | ' + info.message); }); d._lostPatched = true; } },  
+ 9909398: () => { return Module['preinitializedWebGPUDevice'].features.has('float32-filterable') ? 1 : 0; },  
+ 9909490: () => { return Module['preinitializedWebGPUDevice'].features.has('float32-blendable') ? 1 : 0; },  
+ 9909581: () => { var d = Module['preinitializedWebGPUDevice']; return (d && d.features && d.features.has('texture-formats-tier1')) ? 1 : 0; },  
+ 9909708: () => { return Module['preinitializedWebGPUDevice'].features.has('texture-formats-tier2') ? 1 : 0; },  
+ 9909803: () => { return navigator.gpu.wgslLanguageFeatures.has('readonly_and_readwrite_storage_textures') ? 1 : 0; },  
+ 9909905: () => { var d = Module["preinitializedWebGPUDevice"]; if (!d) { return 0; } return WebGPU["importJsDevice"](d); },  
+ 9910013: () => { var info = Module['preinitializedWebGPUDevice']['godotAdapterInfo'] || {}; return stringToNewUTF8([info.vendor, info.description || info.architecture || info.device].filter(Boolean).join(' ') || 'WebGPU Device'); },  
+ 9910230: () => { var vendor = (Module['preinitializedWebGPUDevice']['godotAdapterInfo'] || {}).vendor || ''; vendor = vendor.toLowerCase(); if (vendor.includes('nvidia')) return 0x10de; if (vendor.includes('amd') || vendor.startsWith('ati')) return 0x1002; if (vendor.includes('intel')) return 0x8086; if (vendor.includes('apple')) return 0x106b; if (vendor.includes('qualcomm')) return 0x5143; if (vendor.includes('arm')) return 0x13b5; return 0; },  
+ 9910665: () => { return navigator.gpu.getPreferredCanvasFormat() === 'rgba8unorm'; }
 };
 
 // end include: preamble.js
