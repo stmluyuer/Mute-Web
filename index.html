@@ -9,7 +9,7 @@
     
     <script>
         const TWODOG_PCK_GZ = true;
-        const TWODOG_PCK_PARTS = [{"path": "godot.pck.gz.part000", "size": 50331648}, {"path": "godot.pck.gz.part001", "size": 50331648}, {"path": "godot.pck.gz.part002", "size": 19792567}];
+        const TWODOG_PCK_PARTS = [{"path": "godot.pck.gz.part000", "size": 50331648}, {"path": "godot.pck.gz.part001", "size": 50331648}, {"path": "godot.pck.gz.part002", "size": 19792524}];
         const twodogGz = TWODOG_PCK_GZ && typeof DecompressionStream !== 'undefined';
         // 本地文件页只显示启动说明，不提前发起浏览器会拒绝的模块请求。
         if (location.protocol !== 'file:') {
@@ -168,8 +168,11 @@
                 if (TWODOG_PCK_PARTS.length === 0) return fetch('godot.pck.gz');
                 // 分片是同一 gzip 文件的连续字节，逐片送入原有解压流。
                 async function* readParts() {
-                    for (const part of TWODOG_PCK_PARTS) {
-                        const response = await fetch(part.path);
+                    // 同时下载分片，仍按原始字节顺序送入同一个 gzip 解压流。
+                    const responses = await Promise.all(TWODOG_PCK_PARTS.map(part => fetch(part.path)));
+                    for (let i = 0; i < responses.length; i++) {
+                        const part = TWODOG_PCK_PARTS[i];
+                        const response = responses[i];
                         if (!response.ok) throw new Error(`Cannot load ${part.path}: HTTP ${response.status}`);
                         const reader = response.body.getReader();
                         try {
